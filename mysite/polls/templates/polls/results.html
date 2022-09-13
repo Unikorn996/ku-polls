@@ -1,9 +1,15 @@
+{% load static %}
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+
 <h1>{{ question.question_text }}</h1>
 
 <ul>
 {% for choice in question.choice_set.all %}
+<ul style="list-style: none; display: inline;">
     <li>{{ choice.choice_text }} -- {{ choice.votes }} vote{{ choice.votes|pluralize }}</li>
+    </ul>
 {% endfor %}
 </ul>
 
-<a href="{% url 'polls:detail' question.id %}">Vote again?</a>
+<a href="{% url 'polls:index' %}" class="btn btn-info" role="button">Back to Lists of Polls</a>
