@@ -12,7 +12,7 @@ class Question(models.Model):
         now = timezone.localtime()
         return now - datetime.timedelta(days=1) <= self.pub_date <= now
 
-    def is_publsihed(self):
+    def is_published(self):
         now = timezone.localtime()
         return now >= self.pub_date
 
