@@ -1,8 +1,10 @@
 from django.http import HttpResponseRedirect
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
 from django.views import generic
 from django.utils import timezone
+from django.contrib import messages
+from django.core.exceptions import ObjectDoesNotExist
 
 from .models import Choice, Question
 
@@ -20,6 +22,14 @@ class DetailView(generic.DetailView):
     template_name = 'polls/detail.html'
     def get_queryset(self):
         return Question.objects.filter(pub_date__lte=timezone.now())
+
+    def page_redirection(self, request, **kwargs):
+        try:
+            question = Question.objects.get(pk=kwargs['pk'])
+            if not question.can_vote():
+                return HttpResponseRedirect(reverse('polls:index'), messages.error(request, "This poll is already closed. Can't vote!!!"))
+        except ObjectDoesNotExist:
+            return HttpResponseRedirect(reverse('polls:index'), messages.error(request, "This poll is not exist."))
 
 
 class ResultsView(generic.DetailView):
