@@ -112,4 +112,7 @@ def vote(request, question_id):
         for question in Question.objects.all():
             question.previous_vote = str(request.user.vote_set.get(question=question).selected_choice)
             question.save()
+        date = datetime.now()
+        log = logging.getLogger("polls")
+        log.info("User: %s, Poll's ID: %d, Date: %s.", user, question_id, str(date))
         return HttpResponseRedirect(reverse('polls:results', args=(question.id)))
