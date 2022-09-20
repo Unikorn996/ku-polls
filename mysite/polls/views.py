@@ -1,5 +1,5 @@
 from django.http import HttpResponseRedirect
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from django.views import generic
 from django.utils import timezone
@@ -7,7 +7,6 @@ from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
 from .models import Choice, Question, Vote
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
 from datetime import datetime
 from django.dispatch import receiver
 from django.contrib.auth.signals import user_logged_in, user_logged_out, user_login_failed
@@ -50,6 +49,7 @@ class ResultsView(generic.DetailView):
 
 
 log = logging.getLogger("polls")
+date = datetime.now()
 
 def get_client_ip(request):
     x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
@@ -64,15 +64,17 @@ def get_client_ip(request):
 def update_choice_login(request, **kwargs):
     """Update the latest vote when logged in."""
     for question in Question.objects.all():
-        question.previous_vote = str(request.user.vote_set.get(question=question).selected_choice)
-        question.save()
+        try:
+            question.previous_vote = str(request.user.vote_set.get(question=question).selected_choice)
+            question.save()
+        except(Vote.DoesNotExist):
+            pass
 
 
 @receiver(user_logged_in)
 def log_user_logged_in(sender, request, user, **kwargs):
     """Log when user logs in."""
     ip = get_client_ip(request)
-    date = datetime.now()
     log.info('Login user: %s , IP: %s , Date: %s', user, ip, str(date))
 
 
@@ -80,7 +82,6 @@ def log_user_logged_in(sender, request, user, **kwargs):
 def log_user_logged_out(sender, request, user, **kwargs):
     """Log when user logs out."""
     ip = get_client_ip(request)
-    date = datetime.now()
     log.info('Logout user: %s , IP: %s , Date: %s', user, ip, str(date))
 
 
@@ -88,13 +89,13 @@ def log_user_logged_out(sender, request, user, **kwargs):
 def log_user_login_failed(sender, request, credentials, **kwargs):
     """Log when user fails to login."""
     ip = get_client_ip(request)
-    date = datetime.now()
     log.warning('Login user(failed): %s , IP: %s , Date: %s', credentials['username'], ip, str(date))
 
 
 @login_required()
 def vote(request, question_id):
     """Vote the selected poll."""
+    user = request.user
     question = get_object_or_404(Question, pk=question_id)
     try:
         selected_choice = question.choice_set.get(pk=request.POST['choice'])
@@ -105,6 +106,9 @@ def vote(request, question_id):
         for choice in question.choice_set.all():
             choice.votes = Vote.objects.filter(question=question).filter(selected_choice=choice).count()
             choice.save()
+        if Vote.objects.filter(question=question).filter(selected_choice=choice).count() == 0:
+            selected_choice.votes += 1
+            selected_choice.save()
         for question in Question.objects.all():
             question.previous_vote = str(request.user.vote_set.get(question=question).selected_choice)
             question.save()
