@@ -9,6 +9,7 @@ class Question(models.Model):
     question_text = models.CharField(max_length=200)
     pub_date = models.DateTimeField('date published')
     end_date = models.DateTimeField('end date', null=True, default=timezone.localtime())
+    previous_vote = models.CharField(max_length = 200, default = "")
 
     def was_published_recently(self):
         """Check if the poll is recently published or not."""
@@ -48,4 +49,3 @@ class Vote(models.Model):
     user = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     selected_choice = models.ForeignKey(Choice, on_delete=models.CASCADE)
-    
