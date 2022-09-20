@@ -97,22 +97,24 @@ def vote(request, question_id):
     """Vote the selected poll."""
     user = request.user
     question = get_object_or_404(Question, pk=question_id)
+    if not question.can_vote():
+        return HttpResponseRedirect(reverse('polls:index'))
     try:
         selected_choice = question.choice_set.get(pk=request.POST['choice'])
     except (KeyError, Choice.DoesNotExist):
-        return render(request, 'polls/detail.html', {'question': question, 'error_message': "You didn't select a choice.", })
+        return render(
+            request,
+            'polls/detail.html',
+            {'question': question, 'error_message': "You didn't select a choice.", })
     else:
         Vote.objects.update_or_create(user=user, question=question, defaults={'selected_choice': selected_choice})
         for choice in question.choice_set.all():
             choice.votes = Vote.objects.filter(question=question).filter(selected_choice=choice).count()
             choice.save()
-        if Vote.objects.filter(question=question).filter(selected_choice=choice).count() == 0:
-            selected_choice.votes += 1
-            selected_choice.save()
         for question in Question.objects.all():
             question.previous_vote = str(request.user.vote_set.get(question=question).selected_choice)
             question.save()
         date = datetime.now()
         log = logging.getLogger("polls")
         log.info("User: %s, Poll's ID: %d, Date: %s.", user, question_id, str(date))
-        return HttpResponseRedirect(reverse('polls:results', args=(question.id)))
+        return HttpResponseRedirect(reverse('polls:results', args=(question.id,)))
