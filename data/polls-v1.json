@@ -1,0 +1,44 @@
+[
+{
+  "model": "polls.question",
+  "pk": 1,
+  "fields": {
+    "question_text": "What's up?",
+    "pub_date": "2023-09-03T08:08:22.422Z"
+  }
+},
+{
+  "model": "polls.question",
+  "pk": 2,
+  "fields": {
+    "question_text": "Do you like pineapple on pizza?",
+    "pub_date": "2023-09-03T08:19:33Z"
+  }
+},
+{
+  "model": "polls.question",
+  "pk": 3,
+  "fields": {
+    "question_text": "How would you like your steak?",
+    "pub_date": "2023-09-03T08:20:44Z"
+  }
+},
+{
+  "model": "polls.choice",
+  "pk": 1,
+  "fields": {
+    "question": 1,
+    "choice_text": "Not much",
+    "votes": 2
+  }
+},
+{
+  "model": "polls.choice",
+  "pk": 2,
+  "fields": {
+    "question": 1,
+    "choice_text": "The sky",
+    "votes": 0
+  }
+}
+]
