@@ -27,7 +27,7 @@ All project documents are in the [Project Wiki](../../wiki/Home).
 - [Vision Statement](../../wiki/Vision%20Statement)
 - [Requirements](../../wiki/Requirements)
 - [Development Plan](../../wiki/Development%20Plan)
-- [Iteration 1 Plan](https://github.com/Unikorn996/ku-polls/wiki/Iteration-1-Plan) and [Task Board](https://github.com/users/Unikorn996/projects/2)
-- [Iteration 2 Plan](https://github.com/Unikorn996/ku-polls/wiki/Iteration-2-Plan)
+- [Iteration 1 Plan](https://github.com/Unikorn996/ku-polls/wiki/Iteration-1-Plan) and [Task Board](https://github.com/users/Unikorn996/projects/2/views/1)
+- [Iteration 2 Plan](https://github.com/Unikorn996/ku-polls/wiki/Iteration-2-Plan) and [Task Board](https://github.com/users/Unikorn996/projects/2/views/2)
 
 [django-tutorial]: TODO-write-the-django-tutorial-URL-here
