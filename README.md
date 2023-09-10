@@ -1,6 +1,6 @@
 # KU Polls: Online Survey Questions 
 
-[![Python application](https://github.com/Unikorn996/ku-polls/actions/workflows/python-app.yml/badge.svg)](https://github.com/Unikorn996/ku-polls/actions/workflows/python-app.yml)
+[![Tests](https://github.com/Unikorn996/ku-polls/actions/workflows/testing.yml/badge.svg)](https://github.com/Unikorn996/ku-polls/actions/workflows/testing.yml)
 
 An application to conduct online polls and surveys based
 on the [Django Tutorial project][django-tutorial], with
