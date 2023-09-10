@@ -1,8 +1,11 @@
-from django.shortcuts import render, get_object_or_404
+from typing import Any
+from django import http
+from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.views import generic
 from django.utils import timezone
+from django.contrib import messages
 
 from .models import Question, Choice
 
@@ -13,12 +16,10 @@ class IndexView(generic.ListView):
 
     def get_queryset(self):
         """
-        Return the last five published questions (not including those set to be
+        Return the published questions (not including those set to be
         published in the future).
         """
-        return Question.objects.filter(
-            pub_date__lte=timezone.now()
-        ).order_by('-pub_date')[:5]
+        return Question.objects.filter(pub_date__lte=timezone.now()).order_by('-pub_date')
 
 
 class DetailView(generic.DetailView):
@@ -30,11 +31,31 @@ class DetailView(generic.DetailView):
         Excludes any questions that aren't published yet.
         """
         return Question.objects.filter(pub_date__lte=timezone.now())
+    
+    def dispatch(self, request, *args: Any, **kwargs: Any):
+        """
+        Return to index page if the poll's not in the publication time.
+        """
+        question_text = Question.objects.get(id=kwargs["pk"])
+        if not self.get_object().can_vote():
+            messages.warning(request, f'''The question "{question_text}" is not in the publication time.''')
+            return redirect('polls:index')
+        return super().dispatch(request, *args, **kwargs)
 
 
 class ResultsView(generic.DetailView):
     model = Question
     template_name = 'polls/results.html'
+
+    def dispatch(self, request, *args: Any, **kwargs: Any):
+        """
+        Return to index page if the poll's not in the publication time.
+        """
+        question_text = Question.objects.get(id=kwargs["pk"])
+        if not self.get_object().can_vote():
+            messages.warning(request, f'''The question "{question_text}" is not in the publication time.''')
+            return redirect('polls:index')
+        return super().dispatch(request, *args, **kwargs)
 
 
 def vote(request, question_id):
