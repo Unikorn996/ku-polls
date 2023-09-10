@@ -108,12 +108,12 @@ class QuestionDetailViewTests(TestCase):
     def test_future_question(self):
         """
         The detail view of a question with a pub_date in the future
-        returns a 404 not found.
+        redirects to index page.
         """
-        future_question = create_question(question_text='Future question.', days=5)
+        future_question = create_question(question_text='Future Question.', days=5)
         url = reverse('polls:detail', args=(future_question.id,))
         response = self.client.get(url)
-        self.assertEqual(response.status_code, 404)
+        self.assertRedirects(response, reverse('polls:index'))
 
     def test_past_question(self):
         """
@@ -124,3 +124,69 @@ class QuestionDetailViewTests(TestCase):
         url = reverse('polls:detail', args=(past_question.id,))
         response = self.client.get(url)
         self.assertContains(response, past_question.question_text)
+
+
+class IsPublishedTests(TestCase):
+    def test_question_with_future_pub_date(self):
+        """
+        is_published() returns False for questions whose pub_date
+        is in the future.
+        """
+        time = timezone.now() + datetime.timedelta(days=30)
+        future_question = Question(pub_date=time)
+        self.assertFalse(future_question.is_published())
+
+    def test_question_with_default_pub_date(self):
+        """
+        is_published() returns True for questions whose pub_date
+        is in the default time.
+        """
+        default_question = Question(pub_date=timezone.now())
+        self.assertTrue(default_question.is_published())
+
+    def test_question_with_past_pub_date(self):
+        """
+        is_published() returns True for questions whose pub_date
+        is in the past.
+        """
+        time = timezone.now() - datetime.timedelta(days=30)
+        past_question = Question(pub_date=time)
+        self.assertTrue(past_question.is_published())
+        
+
+class CanVoteTests(TestCase):
+    def test_cannot_vote_after_end_date(self):
+        """
+        can_vote() returns False for questions whose end_date
+        is in the past.
+        """
+        past_pub = timezone.now() - datetime.timedelta(days=60)
+        past_end = timezone.now() - datetime.timedelta(days=30)
+        past_question = Question(pub_date=past_pub, end_date=past_end)
+        self.assertFalse(past_question.can_vote())
+
+    def test_can_vote_before_end_date(self):
+        """
+        can_vote() returns True for questions whose end_date
+        is in the future.
+        """
+        future = timezone.now() + datetime.timedelta(days=30)
+        future_question = Question(pub_date=timezone.now(), end_date=future)
+        self.assertTrue(future_question.can_vote())
+
+    def test_can_vote_with_default_end_date(self):
+        """
+        can_vote() returns True for questions whose end_date
+        is in the default time.
+        """
+        default_question = Question(pub_date=timezone.now())
+        self.assertTrue(default_question.can_vote())
+
+    def test_cannot_vote_with_future_question(self):
+        """
+        can_vote() returns False for questions whose pub_date
+        is in the future.
+        """
+        time = timezone.now() + datetime.timedelta(days=30)
+        future_question = Question(pub_date=time)
+        self.assertFalse(future_question.can_vote())
