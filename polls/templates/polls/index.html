@@ -1,20 +1,38 @@
 {% load static %}
 
 <link rel="stylesheet" href="{% static 'polls/style.css' %}">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200;300;400&display=swap" rel="stylesheet">
 
 <style>
+    body {
+        /* position: relative; */
+        font-family: 'Oswald', sans-serif;
+        font-weight: 400;
+        /* font-size: 50; */
+    }
+    .container {
+        position: absolute;
+        margin-left: 50%;
+        transform: translateX(-50%);
+        text-align: center;
+    }
     #result-index {
         margin-bottom: 20px;
     }
-
-    .polls-table, td {
+    .polls-table {
         border: 1px solid;
+        border-radius: 4px;
+        padding: 5px;
     }
-
     td {
         padding: 10px;
     }
 </style>
+
+<div class="container">
+<h1>KU Polls</h1>
 
 {% if latest_question_list %}
     <table class="polls-table">
@@ -28,3 +46,4 @@
 {% else %}
     <p>No polls are available.</p>
 {% endif %}
+</div>
