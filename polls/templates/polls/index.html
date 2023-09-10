@@ -2,13 +2,29 @@
 
 <link rel="stylesheet" href="{% static 'polls/style.css' %}">
 
+<style>
+    #result-index {
+        margin-bottom: 20px;
+    }
+
+    .polls-table, td {
+        border: 1px solid;
+    }
+
+    td {
+        padding: 10px;
+    }
+</style>
+
 {% if latest_question_list %}
-    <ul>
-    {% for question in latest_question_list %}
-    <li><a href="{% url 'polls:detail' question.id %}">{{ question.question_text }}</a></li>
-    <a id="result" href="{% url 'polls:results' question.id %}">Vote Result</a>
-    {% endfor %}
-    </ul>
+    <table class="polls-table">
+        {% for question in latest_question_list %}
+        <tr>
+            <td><a href="{% url 'polls:detail' question.id %}">{{ question.question_text }}</a></td>
+            <td><a id="result-index" href="{% url 'polls:results' question.id %}">Vote Result</a></td>
+        </tr>
+        {% endfor %}
+    </table>
 {% else %}
     <p>No polls are available.</p>
 {% endif %}
