@@ -37,7 +37,7 @@ class DetailView(generic.DetailView):
         Return to index page if the poll's not in the publication time.
         """
         question_text = Question.objects.get(id=kwargs["pk"])
-        if not self.get_object().can_vote():
+        if not question_text.can_vote():
             messages.warning(request, f'''The question "{question_text}" is not in the publication time.''')
             return redirect('polls:index')
         return super().dispatch(request, *args, **kwargs)
