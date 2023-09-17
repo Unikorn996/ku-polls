@@ -45,6 +45,13 @@
     }
 </style>
 
+<body>
+    <div class="ocean">
+       <div class="wave"></div>
+       <div class="wave"></div>
+       <div class="wave"></div>
+    </div>
+</body>
 
 <form class="box" action="{% url 'polls:vote' question.id %}" method="post">
     {% csrf_token %}
