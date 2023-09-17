@@ -16,16 +16,7 @@
         transform: translateX(-50%);
         text-align: center;
     }
-    table {
-        border: 1px solid;
-        border-radius: 4px;
-        margin-left: auto;
-        margin-right: auto;
-    }
-    td {
-        padding: 15px;
-    }
-    .buttons {
+    .logbutton {
         font-family: 'Oswald', sans-serif;
         font-size: 15;
         padding: 7px 15px;
@@ -37,7 +28,7 @@
         transition: 0.3s;
         margin-top: 20px;
     }
-    .buttons:hover {
+    .logbutton:hover {
         background-color: rgb(92, 92, 92);
         cursor: pointer;
     }
@@ -52,26 +43,20 @@
 </body>
 
 <div class="container">
-<h1>{{ question.question_text }}</h1>
-
-<table>
-    {% for choice in question.choice_set.all %}
-    <tr>
-        <td>{{ choice.choice_text }}</td>
-        <td>{{ choice.votes_count }}</td>
-    </tr>
-    {% endfor %}
-</table>
-
-<a href="{% url 'polls:index' %}"><input class="buttons" type="button" value="Back to List of Polls"></a>
+<h2>Login</h2>
+    <form method="POST">
+        {% csrf_token %}
+        <table class="form-group">
+            {% for field in form %}
+                <tr>
+                    <td>{{ field.label_tag }}</td>
+                    <td>{{ field }}</td>
+                </tr>
+            {% endfor %}
+            </table>
+        <p>
+            <button class="logbutton" type="submit">Login</button>
+        </p>
+        <input type="hidden" name="next" value="{{next}}"/>
+    </form>
 </div>
-
-<!-- {% if messages %}
-<div class="messages">
-    <ul class="messages">
-        {% for message in messages %}
-        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-        {% endfor %}
-    </ul>
-</div>
-{% endif %} -->

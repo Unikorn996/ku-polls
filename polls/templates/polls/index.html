@@ -7,10 +7,8 @@
 
 <style>
     body {
-        /* position: relative; */
         font-family: 'Oswald', sans-serif;
         font-weight: 400;
-        /* font-size: 50; */
     }
     .container {
         position: absolute;
@@ -25,11 +23,23 @@
         border: 1px solid;
         border-radius: 4px;
         padding: 5px;
+        background-color: white;
     }
     td {
         padding: 10px;
     }
+    h1 {
+        color: black;
+    }
 </style>
+
+<body>
+    <div class="ocean">
+       <div class="wave"></div>
+       <div class="wave"></div>
+       <div class="wave"></div>
+    </div>
+</body>
 
 <div class="container">
 <h1>KU Polls</h1>
@@ -47,3 +57,9 @@
     <p>No polls are available.</p>
 {% endif %}
 </div>
+
+{% if user.is_authenticated %}
+    <body>Welcome, {{user.first_name}} {{user.last_name}}</body> <a href="{% url 'logout' %}">Logout</a>
+{% else %}
+    Please <a href="{% url 'login' %}?next={{request.path}}" >Login</a> to continue.
+{% endif %}
