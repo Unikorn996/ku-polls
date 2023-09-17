@@ -50,11 +50,11 @@ class Choice(models.Model):
     choice_text = models.CharField(max_length=200)
     votes = models.IntegerField(default=0)
 
-    # def votes(self):
-    #     """
-    #     Count the votes
-    #     """
-    #     return self.vote_set.count()
+    def votes(self):
+        """
+        Count the votes
+        """
+        return self.vote_set.count()
 
     def __str__(self):
         """
@@ -67,16 +67,9 @@ class Vote(models.Model):
     """
     Votes for polls
     """
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     choice = models.ForeignKey(Choice, on_delete=models.CASCADE)
-    ip = models.GenericIPAddressField()
 
-    def vote(self):
-        """
-        One vote for one authenticated user
-        """
-        user = models.ForeignKey(User, on_delete=models.CASCADE)
-        choice = models.ForeignKey(Choice, on_delete=models.CASCADE)
-    
     def __str__(self):
         """
         Return a string
