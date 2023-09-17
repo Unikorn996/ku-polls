@@ -23,9 +23,10 @@ python manage.py runserver
 ```
 
 3. Demo Users for Login
+   
 | Username  | Password        |
 |-----------|-----------------|
-|   demoboi   | hackme6969 |
+|   demoboi   | hackme6969    |
 |   billyboi   | plsdonthackme888 |
 
 ## Project Documents
