@@ -56,6 +56,7 @@ class ResultsView(generic.DetailView):
         if not self.get_object().can_vote():
             messages.warning(request, f'''The question "{question_text}" is not in the publication time.''')
             return redirect('polls:index')
+        # messages.success(request, "Your vote has been recorded.")
         return super().dispatch(request, *args, **kwargs)
 
 
@@ -83,6 +84,5 @@ def vote(request, question_id):
         # no matching vote - create a new vote object
         vote = Vote.objects.create(user=this_user, choice=selected_choice)
     vote.save()
-    # TODO: Use messages to display a confirmation on the results page.
 
     return HttpResponseRedirect(reverse('polls:results', args=(question.id,)))

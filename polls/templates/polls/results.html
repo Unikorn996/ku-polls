@@ -65,3 +65,13 @@
 
 <a href="{% url 'polls:index' %}"><input class="buttons" type="button" value="Back to List of Polls"></a>
 </div>
+
+<!-- {% if messages %}
+<div class="messages">
+    <ul class="messages">
+        {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endif %} -->

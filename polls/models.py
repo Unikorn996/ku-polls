@@ -50,11 +50,11 @@ class Choice(models.Model):
     choice_text = models.CharField(max_length=200)
     votes = models.IntegerField(default=0)
 
-    def votes(self):
-        """
-        Count the votes
-        """
-        return self.vote_set.count()
+    # def votes(self):
+    #     """
+    #     Count the votes
+    #     """
+    #     return self.vote_set.count()
 
     def __str__(self):
         """
