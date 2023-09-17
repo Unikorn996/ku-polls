@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils import timezone
 import datetime
+from django.contrib.auth.models import User
 
 
 class Question(models.Model):
@@ -49,8 +50,35 @@ class Choice(models.Model):
     choice_text = models.CharField(max_length=200)
     votes = models.IntegerField(default=0)
 
+    def votes(self):
+        """
+        Count the votes
+        """
+        return self.vote_set.count()
+
     def __str__(self):
         """
         Return a string
         """
         return self.choice_text
+    
+
+class Vote(models.Model):
+    """
+    Votes for polls
+    """
+    choice = models.ForeignKey(Choice, on_delete=models.CASCADE)
+    ip = models.GenericIPAddressField()
+
+    def vote(self):
+        """
+        One vote for one authenticated user
+        """
+        user = models.ForeignKey(User, on_delete=models.CASCADE)
+        choice = models.ForeignKey(Choice, on_delete=models.CASCADE)
+    
+    def __str__(self):
+        """
+        Return a string
+        """
+        return f'Vote for {self.choice_text} from {self.question_text}'

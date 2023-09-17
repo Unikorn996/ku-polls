@@ -6,8 +6,9 @@ from django.urls import reverse
 from django.views import generic
 from django.utils import timezone
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 
-from .models import Question, Choice
+from .models import Question, Choice, Vote
 
 
 class IndexView(generic.ListView):
@@ -58,8 +59,13 @@ class ResultsView(generic.DetailView):
         return super().dispatch(request, *args, **kwargs)
 
 
+@login_required
 def vote(request, question_id):
+    """
+    User's vote for a choice in a poll.
+    """
     question = get_object_or_404(Question, pk=question_id)
+    this_user = request.user
     try:
         selected_choice = question.choice_set.get(pk=request.POST['choice'])
     except (KeyError, Choice.DoesNotExist):
@@ -68,7 +74,15 @@ def vote(request, question_id):
             'question': question,
             'error_message': "You didn't select a choice.",
         })
-    else:
-        selected_choice.votes += 1
-        selected_choice.save()
-        return HttpResponseRedirect(reverse('polls:results', args=(question.id,)))
+    try:
+        # find a vote for this user and this question
+        vote = Vote.objects.get(user=this_user, choice__question=question)
+        # update the vote after a user has changed their vote
+        vote.choice = selected_choice
+    except Vote.DoesNotExist:
+        # no matching vote - create a new vote object
+        vote = Vote.objects.create(user=this_user, choice=selected_choice)
+    vote.save()
+    # TODO: Use messages to display a confirmation on the results page.
+
+    return HttpResponseRedirect(reverse('polls:results', args=(question.id,)))
