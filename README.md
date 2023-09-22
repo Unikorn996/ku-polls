@@ -26,11 +26,11 @@ python manage.py runserver
 
 3. Demo Users for Login
    
-| Username  | Password        |
-|-----------|-----------------|
-|   demoboi   | hackme6969    |
-|   billyboi   | plsdonthackme888 |
-| testo.yoyo | AyeYo420 |
+| Username    | Password         |
+|-------------|------------------|
+| demoboi     | hackme6969       |
+| billyboi    | plsdonthackme888 |
+| testo.yoyo  | AyeYo420         |
 
 ## Project Documents
 
