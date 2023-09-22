@@ -1,0 +1,65 @@
+{% load static %}
+
+<link rel="stylesheet" href="{% static 'polls/style.css' %}">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200;300;400&display=swap" rel="stylesheet">
+
+<style>
+    body {
+        font-family: 'Oswald', sans-serif;
+        font-weight: 400;
+    }
+    .register-button {
+        font-family: 'Oswald', sans-serif;
+        font-size: 15;
+        padding: 7px 15px;
+        border-radius: 4px;
+        background-color: rgb(39, 39, 39);
+        color: white;
+        border: none;
+        margin: 7px;
+        transition: 0.3s;
+        margin-top: 20px;
+    }
+    .register-button:hover {
+        background-color: rgb(92, 92, 92);
+        cursor: pointer;
+    }
+</style>
+
+
+<body>
+    <div class="ocean">
+       <div class="wave"></div>
+       <div class="wave"></div>
+       <div class="wave"></div>
+    </div>
+</body>
+
+<h2>Register</h2>
+<form method="POST">
+    {% csrf_token %}
+    <table class="regis-form" style="padding: 2ex;">
+        <!-- {{ form.as_table }} -->
+        {% for field in form %}
+            <tr>
+                <td>{{ field.label_tag }}</td>
+                <td>{{ field }}</td>
+            </tr>
+        {% endfor %}
+        
+        <ul class="passwd">
+            <li>Username should be 150 characters or fewer. Letters, digits and @ / . / + / - / _ only.</li>
+            <li>Your password cannot be too similar to your other personal information.</li>
+            <li>Your password must contain at least 8 characters.</li>
+            <li>Your password cannot be a commonly used password.</li>
+            <li>Your password cannot be entirely numeric.</li>
+        </ul>
+        <tr>
+            <td colspan="2">
+                <button class="register-button" type="submit">Register</button>
+            </td>
+        </tr>
+    </table>
+</form>

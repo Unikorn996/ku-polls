@@ -7,6 +7,8 @@ from django.views import generic
 from django.utils import timezone
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import login, authenticate
+from django.contrib.auth.forms import UserCreationForm
 
 from .models import Question, Choice, Vote
 
@@ -46,11 +48,13 @@ class DetailView(generic.DetailView):
         if not question_text.can_vote():
             messages.warning(request, f'''The question "{question_text}" is not in the publication time.''')
             return redirect('polls:index')
+        
         if user.is_authenticated:
             try:
                 voted_choice = question_text.choice_set.get(vote__user=user)
-            except (Vote.DoesNotExist, TypeError):
+            except (Choice.DoesNotExist, TypeError):
                 pass
+
         if voted_choice is not None:
             # User has already voted
             return render(request, self.template_name, {"question": question_text, "voted": voted_choice})
@@ -102,3 +106,26 @@ def vote(request, question_id):
     messages.success(request, f"Your vote has been recorded successfully.")
 
     return HttpResponseRedirect(reverse('polls:results', args=(question.id,)))
+
+
+def signup(request):
+    """Register a new user."""
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            # get named fields from the form data
+            username = form.cleaned_data.get('username')
+            # password input field is named 'password1'
+            raw_passwd = form.cleaned_data.get('password1')
+            user = authenticate(username=username,password=raw_passwd)
+            login(request, user)
+            return redirect('polls:index')
+        # what if form is not valid?
+        # we should display a message in signup.html
+        if form.errors:
+            messages.error(request, form.errors)
+    else:
+        # create a user form and display it the signup page
+        form = UserCreationForm()
+    return render(request, 'registration/signup.html', {'form': form})
