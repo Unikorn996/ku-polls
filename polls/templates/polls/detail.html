@@ -69,3 +69,9 @@
     <a href="{% url 'polls:results' question.id %}"><input class="buttons" type="button" value="Result"></a>
     <a href="{% url 'polls:index' %}"><input class="buttons" type="button" value="Back to List of Polls"></a>
 </form>
+
+{% if user.is_authenticated %}
+    <body>Welcome, {{user.first_name}} {{user.last_name}} ({{user.username}})</body> <a href="{% url 'logout' %}">Logout</a>
+{% else %}
+    Please <a href="{% url 'login' %}?next={{request.path}}" >Login</a> to continue.
+{% endif %}
