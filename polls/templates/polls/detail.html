@@ -60,7 +60,7 @@
         <div class="choices">
             {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
             {% for choice in question.choice_set.all %}
-                <input class="choice" type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}">
+                <input class="choice" type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}" {% if choice == voted %} checked {% endif %}>
                 <label class="choice" for="choice{{ forloop.counter }}">{{ choice.choice_text }}</label><br>
             {% endfor %}
         </div>

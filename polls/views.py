@@ -37,11 +37,26 @@ class DetailView(generic.DetailView):
         """
         Return to index page if the poll's not in the publication time.
         """
+        user = request.user
         question_text = Question.objects.get(id=kwargs["pk"])
+
+        # Initialize voted_choice with None (default value)
+        voted_choice = None
+
         if not question_text.can_vote():
             messages.warning(request, f'''The question "{question_text}" is not in the publication time.''')
             return redirect('polls:index')
-        return super().dispatch(request, *args, **kwargs)
+        if user.is_authenticated:
+            try:
+                voted_choice = question_text.choice_set.get(vote__user=user)
+            except (Vote.DoesNotExist, TypeError):
+                pass
+        if voted_choice is not None:
+            # User has already voted
+            return render(request, self.template_name, {"question": question_text, "voted": voted_choice})
+        else:
+            # User is eligible to vote
+            return super().dispatch(request, *args, **kwargs)
 
 
 class ResultsView(generic.DetailView):
@@ -84,5 +99,6 @@ def vote(request, question_id):
         # no matching vote - create a new vote object
         vote = Vote.objects.create(user=this_user, choice=selected_choice)
     vote.save()
+    messages.success(request, f"Your vote has been recorded successfully.")
 
     return HttpResponseRedirect(reverse('polls:results', args=(question.id,)))
