@@ -60,7 +60,7 @@
         <div class="choices">
             {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
             {% for choice in question.choice_set.all %}
-                <input class="choice" type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}">
+                <input class="choice" type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}" {% if choice == voted %} checked {% endif %}>
                 <label class="choice" for="choice{{ forloop.counter }}">{{ choice.choice_text }}</label><br>
             {% endfor %}
         </div>
@@ -69,3 +69,9 @@
     <a href="{% url 'polls:results' question.id %}"><input class="buttons" type="button" value="Result"></a>
     <a href="{% url 'polls:index' %}"><input class="buttons" type="button" value="Back to List of Polls"></a>
 </form>
+
+{% if user.is_authenticated %}
+    <body>Welcome, {{user.first_name}} {{user.last_name}} ({{user.username}})</body> <a href="{% url 'logout' %}">Logout</a>
+{% else %}
+    Please <a href="{% url 'login' %}?next={{request.path}}" >Login</a> to continue.
+{% endif %}

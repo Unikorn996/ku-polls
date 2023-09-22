@@ -7,6 +7,8 @@ from django.views import generic
 from django.utils import timezone
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import login, authenticate
+from django.contrib.auth.forms import UserCreationForm
 
 from .models import Question, Choice, Vote
 
@@ -37,11 +39,28 @@ class DetailView(generic.DetailView):
         """
         Return to index page if the poll's not in the publication time.
         """
+        user = request.user
         question_text = Question.objects.get(id=kwargs["pk"])
+
+        # Initialize voted_choice with None (default value)
+        voted_choice = None
+
         if not question_text.can_vote():
             messages.warning(request, f'''The question "{question_text}" is not in the publication time.''')
             return redirect('polls:index')
-        return super().dispatch(request, *args, **kwargs)
+        
+        if user.is_authenticated:
+            try:
+                voted_choice = question_text.choice_set.get(vote__user=user)
+            except (Choice.DoesNotExist, TypeError):
+                pass
+
+        if voted_choice is not None:
+            # User has already voted
+            return render(request, self.template_name, {"question": question_text, "voted": voted_choice})
+        else:
+            # User is eligible to vote
+            return super().dispatch(request, *args, **kwargs)
 
 
 class ResultsView(generic.DetailView):
@@ -67,6 +86,8 @@ def vote(request, question_id):
     """
     question = get_object_or_404(Question, pk=question_id)
     this_user = request.user
+    print("current user is", this_user.id, "login", this_user.username)
+    print("Real name:", this_user.first_name, this_user.last_name)
     try:
         selected_choice = question.choice_set.get(pk=request.POST['choice'])
     except (KeyError, Choice.DoesNotExist):
@@ -84,5 +105,29 @@ def vote(request, question_id):
         # no matching vote - create a new vote object
         vote = Vote.objects.create(user=this_user, choice=selected_choice)
     vote.save()
+    messages.success(request, f"Your vote has been recorded successfully.")
 
     return HttpResponseRedirect(reverse('polls:results', args=(question.id,)))
+
+
+def signup(request):
+    """Register a new user."""
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            # get named fields from the form data
+            username = form.cleaned_data.get('username')
+            # password input field is named 'password1'
+            raw_passwd = form.cleaned_data.get('password1')
+            user = authenticate(username=username,password=raw_passwd)
+            login(request, user)
+            return redirect('polls:index')
+        # what if form is not valid?
+        # we should display a message in signup.html
+        if form.errors:
+            messages.error(request, form.errors)
+    else:
+        # create a user form and display it the signup page
+        form = UserCreationForm()
+    return render(request, 'registration/signup.html', {'form': form})
