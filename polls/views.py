@@ -86,6 +86,8 @@ def vote(request, question_id):
     """
     question = get_object_or_404(Question, pk=question_id)
     this_user = request.user
+    print("current user is", this_user.id, "login", this_user.username)
+    print("Real name:", this_user.first_name, this_user.last_name)
     try:
         selected_choice = question.choice_set.get(pk=request.POST['choice'])
     except (KeyError, Choice.DoesNotExist):
