@@ -28,6 +28,7 @@ python manage.py runserver
 |-----------|-----------------|
 |   demoboi   | hackme6969    |
 |   billyboi   | plsdonthackme888 |
+| testo.yoyo | AyeYo420 |
 
 ## Project Documents
 
