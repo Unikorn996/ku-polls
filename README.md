@@ -11,10 +11,12 @@ https://cpske.github.io/ISP) course at Kasetsart University.
 
 ## Install and Run
 
-1. Installation
+1. Installation and Setup
 ```
 git clone https://github.com/xxxxxx/ku-polls
 chdir ku-polls
+pip install -r requirements.txt
+python manage.py migrate
 ```
 
 2. Run
