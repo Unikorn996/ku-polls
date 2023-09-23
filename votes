@@ -1,0 +1,149 @@
+[
+{
+  "model": "polls.question",
+  "pk": 4,
+  "fields": {
+    "question_text": "Do you like pineapple on pizza?",
+    "pub_date": "2023-09-10T11:40:41.166Z",
+    "end_date": null
+  }
+},
+{
+  "model": "polls.question",
+  "pk": 5,
+  "fields": {
+    "question_text": "How would you like your steak?",
+    "pub_date": "2023-09-10T11:40:58.209Z",
+    "end_date": null
+  }
+},
+{
+  "model": "polls.choice",
+  "pk": 13,
+  "fields": {
+    "question": 4,
+    "choice_text": "YESSS",
+    "votes": 3
+  }
+},
+{
+  "model": "polls.choice",
+  "pk": 14,
+  "fields": {
+    "question": 4,
+    "choice_text": "Ewww",
+    "votes": 2
+  }
+},
+{
+  "model": "polls.choice",
+  "pk": 15,
+  "fields": {
+    "question": 4,
+    "choice_text": "I'm Lactose Intolerant...",
+    "votes": 0
+  }
+},
+{
+  "model": "polls.choice",
+  "pk": 16,
+  "fields": {
+    "question": 5,
+    "choice_text": "Rare",
+    "votes": 0
+  }
+},
+{
+  "model": "polls.choice",
+  "pk": 17,
+  "fields": {
+    "question": 5,
+    "choice_text": "Medium-Rare",
+    "votes": 2
+  }
+},
+{
+  "model": "polls.choice",
+  "pk": 18,
+  "fields": {
+    "question": 5,
+    "choice_text": "Medium",
+    "votes": 1
+  }
+},
+{
+  "model": "polls.choice",
+  "pk": 19,
+  "fields": {
+    "question": 5,
+    "choice_text": "Medium-Well",
+    "votes": 0
+  }
+},
+{
+  "model": "polls.choice",
+  "pk": 20,
+  "fields": {
+    "question": 5,
+    "choice_text": "Well-Done",
+    "votes": 0
+  }
+},
+{
+  "model": "polls.choice",
+  "pk": 21,
+  "fields": {
+    "question": 5,
+    "choice_text": "Congratulations",
+    "votes": 1
+  }
+},
+{
+  "model": "polls.vote",
+  "pk": 1,
+  "fields": {
+    "user": 2,
+    "choice": 19
+  }
+},
+{
+  "model": "polls.vote",
+  "pk": 2,
+  "fields": {
+    "user": 2,
+    "choice": 13
+  }
+},
+{
+  "model": "polls.vote",
+  "pk": 3,
+  "fields": {
+    "user": 3,
+    "choice": 14
+  }
+},
+{
+  "model": "polls.vote",
+  "pk": 4,
+  "fields": {
+    "user": 3,
+    "choice": 20
+  }
+},
+{
+  "model": "polls.vote",
+  "pk": 5,
+  "fields": {
+    "user": 4,
+    "choice": 19
+  }
+},
+{
+  "model": "polls.vote",
+  "pk": 6,
+  "fields": {
+    "user": 4,
+    "choice": 14
+  }
+}
+]
