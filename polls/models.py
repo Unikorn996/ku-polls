@@ -24,6 +24,8 @@ class Question(models.Model):
         Return True if the question is in publication time.
         """
         now = timezone.now()
+        if self.end_date is not None:
+            return self.pub_date <= now <= self.end_date
         return self.pub_date <= now
     
     def can_vote(self):

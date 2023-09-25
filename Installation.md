@@ -42,5 +42,5 @@ python manage.py migrate
 9. load data (JSON)
 
 ```
-python manage.py loaddata data/polls.json data/users-v1.json
+python manage.py loaddata data/polls-v2.json data/users-v2.json
 ```
